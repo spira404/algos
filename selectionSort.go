@@ -4,8 +4,8 @@ import(
 	"fmt"
 )
 
-func selSort(slice []int, n int) ([]int){
-	
+func selSort(slice []int) ([]int){
+	n := len(slice)
 	//for every value of slice
 	for i := 0; i <	n - 1; i ++{
 		least := i
@@ -28,6 +28,6 @@ func main() {
 	// test slice
 	slice := []int{18, 19, 49, 221, 2322, 319, 19}
 	fmt.Printf("%v - original slice \n", slice)
-	slice2 := selSort(slice, len(slice))
+	slice2 := selSort(slice)
 	fmt.Printf("%v - sorted slice \n", slice2)
 }
