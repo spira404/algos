@@ -4,44 +4,58 @@ package main
 
 import(
 	"fmt"
-	"slices"
 )
 
+// init test graph implementation
 var graph = map[int][]int{
 	0: {1, 2},
-	1: {0, 2, 3}
-	2: {0, 2, 4}
-	3: {1, 4}
-	4: {2, 3}
+	1: {0, 2, 3},
+	2: {0, 1, 4},
+	3: {1, 4},
+	4: {2, 3, 5},
+	5: {4},
 }
 
-func bfs(graph map, a, b) map {
+func bfs(graph map[int][]int, a int, b int) []int {
 
-	// visited := []int{}
-	parents := map[int][]int{}
-	common := []int{}
+	// child: parent of nodes (source node have value -1)
+	parents := map[int]int{a: -1}
+	// show the current nodes that are checked (queue)
+	tocheck := []int{}
+	tocheck = append(tocheck, a)
 
-	common = append(common, a)
-
-	for len(common) > 0{
-		node := common[0]
-		visited = append(visited, node)
-		common = common[1:]
-		for val, _ := range graph[node] {
-			if !slices.Contains(parents, val){
-				parents[val] = node
-				common = append(common, val)
+	for len(tocheck) > 0{
+		// moving first node from common to visited
+		node := tocheck[0]
+		tocheck = tocheck[1:]
+		// add current node as parent to children
+		for _, child := range graph[node] {
+			if _, ok := parents[child]; !ok{
+				parents[child] = node
+				tocheck = append(tocheck, child)
 				if node == b {
 					break
 				}
 			}
 		}
 	}
-	// insert here path restoring from parents map
+
+	// go from target to source by their parents
+	path := []int{b}
+	// while target becomes source (-1)
+	for{
+		if parents[b] != -1{
+			path = append([]int{parents[b]}, path...)
+			b = parents[b]
+		}else{
+			break
+		}
+	}
+	return path
 }
 	
 
 func main(){
-	path := bfs(graph, 1, 4)
+	path := bfs(graph, 0, 5)
 	fmt.Println(path)
 }
